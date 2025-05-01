@@ -16,7 +16,8 @@ class DashboardController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // Metode middleware harus diterapkan melalui route middleware
+        // bukan melalui controller di Laravel 12
     }
 
     /**

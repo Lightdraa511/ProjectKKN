@@ -40,8 +40,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
 });
 
-// Logout route (available for authenticated users)
+// Logout routes (available for authenticated users)
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout')->middleware('auth:admin');
 
 // User routes
 Route::middleware(['auth'])->group(function () {

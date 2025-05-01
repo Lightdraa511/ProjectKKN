@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Admin;
+use App\Models\Faculty;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +15,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Create default admin account
+        Admin::create([
+            'username' => 'admin',
+            'name' => 'Administrator',
+            'password' => Hash::make('admin123'),
         ]);
+
+        // Create faculties
+        $faculties = [
+            ['name' => 'Fakultas Teknik', 'code' => 'FT'],
+            ['name' => 'Fakultas Ekonomi', 'code' => 'FE'],
+            ['name' => 'Fakultas Hukum', 'code' => 'FH'],
+            ['name' => 'Fakultas Kedokteran', 'code' => 'FK'],
+            ['name' => 'Fakultas MIPA', 'code' => 'FMIPA'],
+            ['name' => 'Fakultas Pertanian', 'code' => 'FP'],
+        ];
+
+        foreach ($faculties as $faculty) {
+            Faculty::create($faculty);
+        }
     }
 }
