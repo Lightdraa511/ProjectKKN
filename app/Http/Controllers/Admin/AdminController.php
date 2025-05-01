@@ -119,7 +119,28 @@ class AdminController extends Controller
      */
     public function settings()
     {
-        return view('admin.settings');
+        // Ambil data pengaturan dari database atau dari file konfigurasi
+        $settings = [
+            'registration_start' => config('kkn.registration_start', now()->format('Y-m-d')),
+            'registration_end' => config('kkn.registration_end', now()->addMonths(1)->format('Y-m-d')),
+            'kkn_start' => config('kkn.kkn_start', now()->addMonths(2)->format('Y-m-d')),
+            'kkn_end' => config('kkn.kkn_end', now()->addMonths(3)->format('Y-m-d')),
+            'registration_fee' => config('kkn.registration_fee', 500000),
+            'min_sks' => config('kkn.min_sks', 100),
+            'min_gpa' => config('kkn.min_gpa', 2.75),
+            'announcement' => config('kkn.announcement', '')
+        ];
+
+        // Tambahkan statistik untuk ditampilkan di sidebar
+        $totalUsers = User::count();
+        $completedRegistrations = User::where('profile_completed', true)->count();
+        $totalLocations = Location::count();
+
+        return view('admin.settings', array_merge($settings, [
+            'totalUsers' => $totalUsers,
+            'completedRegistrations' => $completedRegistrations,
+            'totalLocations' => $totalLocations,
+        ]));
     }
 
     /**
@@ -130,7 +151,25 @@ class AdminController extends Controller
      */
     public function updateSettings(Request $request)
     {
-        // Implementasi penyimpanan pengaturan
+        $validated = $request->validate([
+            'registration_start' => 'required|date',
+            'registration_end' => 'required|date|after:registration_start',
+            'kkn_start' => 'required|date',
+            'kkn_end' => 'required|date|after:kkn_start',
+            'registration_fee' => 'required|numeric|min:0',
+            'min_sks' => 'required|numeric|min:0',
+            'min_gpa' => 'required|numeric|min:0|max:4',
+            'announcement' => 'nullable|string',
+        ]);
+
+        // Simpan pengaturan (misalnya ke dalam database atau file konfigurasi)
+        // Di sini kita akan menggunakan config untuk sementara
+        foreach ($validated as $key => $value) {
+            config(['kkn.' . $key => $value]);
+        }
+
+        // Dalam implementasi nyata, simpan ke dalam database atau file konfigurasi
+
         return redirect()->route('admin.settings')
             ->with('success', 'Pengaturan berhasil disimpan.');
     }
@@ -142,7 +181,12 @@ class AdminController extends Controller
      */
     public function account()
     {
-        return view('admin.account');
+        // Tambahkan data login log jika ada
+        $loginLogs = collect(); // Placeholder, sebaiknya ambil dari database jika ada
+
+        return view('admin.account', [
+            'loginLogs' => $loginLogs
+        ]);
     }
 
     /**
