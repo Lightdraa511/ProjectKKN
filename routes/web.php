@@ -45,6 +45,9 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout')->middleware('auth:admin');
 
+// Midtrans callback (no middleware)
+Route::post('/payment/notification', [PaymentController::class, 'notification'])->name('payment.notification');
+
 // User routes
 Route::middleware(['auth'])->group(function () {
     // Dashboard
@@ -52,8 +55,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Payment process
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
-    Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');
+    Route::get('/payment/finish', [PaymentController::class, 'finish'])->name('payment.finish');
+    Route::get('/payment/waiting', [PaymentController::class, 'waiting'])->name('payment.waiting');
     Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
+    Route::get('/payment/check-status', [PaymentController::class, 'checkStatus'])->name('payment.checkStatus');
 
     // Location selection
     Route::get('/locations', [LocationController::class, 'index'])->name('locations.index');

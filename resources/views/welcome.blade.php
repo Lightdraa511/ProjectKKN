@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Pendaftaran KKN Universitas Langlangbuana</title>
-    <style>
+            <style>
         * {
             margin: 0;
             padding: 0;
@@ -216,8 +216,8 @@
                 margin: 0;
             }
         }
-    </style>
-</head>
+            </style>
+    </head>
 <body>
     <header>
         <div class="logo">
@@ -236,8 +236,8 @@
                     <a href="{{ route('register') }}" class="btn">Daftar</a>
                 </div>
             </ul>
-        </nav>
-    </header>
+                </nav>
+        </header>
 
     <section class="hero" id="beranda">
         <h1>Pendaftaran Kuliah Kerja Nyata (KKN) {{ date('Y') }}</h1>
@@ -287,7 +287,7 @@
                             <li>Bukti pembayaran biaya KKN</li>
                             <li>Surat izin orang tua/wali</li>
                             <li>Surat keterangan sehat dari dokter</li>
-                        </ul>
+                    </ul>
                     </div>
                 </div>
                 <div class="card">
@@ -304,7 +304,7 @@
                             <li>Topi dan ID Card</li>
                             <li>Biaya operasional kegiatan</li>
                             <li>Pembekalan dan pelatihan</li>
-                        </ul>
+                    </ul>
                     </div>
                 </div>
             </div>
@@ -400,11 +400,11 @@
                 </div>
             </div>
         </section>
-    </div>
+        </div>
 
     <footer>
         <p>&copy; {{ date('Y') }} P3MM (Biro Pengembangan Prestasi dan Pengabdian Kepada Masyarakat oleh Mahasiswa di Universitas Langlangbuana)</p>
         <p>Jl. Lengkong</p>
     </footer>
-</body>
+    </body>
 </html>
