@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('title', 'Register - Sistem Pendaftaran KKN')
 
@@ -77,6 +77,8 @@
 
         <div class="links">
             <a href="{{ route('login') }}">Sudah memiliki akun? Login</a>
+            <br><br>
+            <a href="{{ route('landing') }}" class="back-to-home">← Kembali ke Beranda</a>
         </div>
     </form>
 </div>

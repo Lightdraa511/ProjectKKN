@@ -23,10 +23,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Redirect root to login
+// Landing page
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    return view('landing');
+})->name('landing');
 
 // Auth routes
 Route::middleware('guest')->group(function () {

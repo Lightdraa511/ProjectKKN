@@ -44,7 +44,7 @@
             text-decoration: underline;
         }
         .hero {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ asset("images/hero-kkn.jpg") }}');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://source.unsplash.com/random/1200x400/?campus,university');
             background-size: cover;
             background-position: center;
             color: white;
@@ -167,61 +167,49 @@
             padding: 2rem;
             margin-top: 3rem;
         }
-        .login-register {
+        .form-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-check {
+            margin-bottom: 0.5rem;
+        }
+        .auth-buttons {
             display: flex;
             gap: 1rem;
+            margin-top: 1rem;
         }
-        .login-btn {
-            background-color: transparent;
-            border: 2px solid white;
-        }
-        .login-btn:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                padding: 1rem;
-            }
-            .logo {
-                margin-bottom: 1rem;
-            }
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .timeline {
-                flex-direction: column;
-                margin: 2rem 0;
-            }
-            .timeline::before {
-                height: 100%;
-                width: 4px;
-                top: 0;
-                left: 30px;
-            }
-            .timeline-item {
-                width: 100%;
-                margin-bottom: 2rem;
-                text-align: left;
-                padding-left: 60px;
-            }
-            .timeline-dot {
-                position: absolute;
-                left: 15px;
-                top: 0;
-                margin: 0;
-            }
+        .auth-buttons .btn {
+            flex: 1;
         }
     </style>
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo Universitas">
+            <img src="https://placehold.co/60x60/005691/FFF?text=UNLA" alt="Logo Universitas">
             <h1>Universitas Langlangbuana</h1>
         </div>
         <nav>
@@ -231,28 +219,23 @@
                 <li><a href="#jadwal">Jadwal</a></li>
                 <li><a href="#lokasi">Lokasi</a></li>
                 <li><a href="#kontak">Kontak</a></li>
-                <div class="login-register">
-                    <a href="{{ route('login') }}" class="btn login-btn">Login</a>
-                    <a href="{{ route('register') }}" class="btn">Daftar</a>
-                </div>
             </ul>
         </nav>
     </header>
 
     <section class="hero" id="beranda">
-        <h1>Pendaftaran Kuliah Kerja Nyata (KKN) {{ date('Y') }}</h1>
+        <h1>Pendaftaran Kuliah Kerja Nyata (KKN) 2025</h1>
         <p>KKN merupakan program pengabdian kepada masyarakat yang memberikan pengalaman belajar dan bekerja bagi mahasiswa dalam membangun kehidupan masyarakat yang lebih baik.</p>
-        <a href="{{ route('register') }}" class="btn">Daftar Sekarang</a>
+        <div class="auth-buttons">
+            <a href="{{ route('login') }}" class="btn">Masuk</a>
+            <a href="{{ route('register') }}" class="btn" style="background-color: #007bff;">Daftar</a>
+        </div>
     </section>
 
     <div class="container">
         <div class="announcement">
             <h3>Pengumuman Penting!</h3>
-            <p>Pendaftaran KKN Periode I Tahun {{ date('Y') }} telah dibuka mulai tanggal
-                {{ \App\Models\Setting::where('key', 'registration_start')->first() ? \Carbon\Carbon::parse(\App\Models\Setting::where('key', 'registration_start')->first()->value)->format('d F Y') : '1 Maret ' . date('Y') }}
-                dan akan ditutup pada tanggal
-                {{ \App\Models\Setting::where('key', 'registration_end')->first() ? \Carbon\Carbon::parse(\App\Models\Setting::where('key', 'registration_end')->first()->value)->format('d F Y') : '15 April ' . date('Y') }}.
-                Pastikan untuk melengkapi semua persyaratan sebelum batas waktu pendaftaran.</p>
+            <p>Pendaftaran KKN Periode I Tahun 2025 telah dibuka mulai tanggal 1 Maret 2025 dan akan ditutup pada tanggal 15 April 2025. Pastikan untuk melengkapi semua persyaratan sebelum batas waktu pendaftaran.</p>
         </div>
 
         <section id="informasi">
@@ -265,10 +248,8 @@
                     <div class="card-body">
                         <ul>
                             <li>Mahasiswa aktif minimal semester 6</li>
-                            <li>Telah menyelesaikan minimal
-                                {{ \App\Models\Setting::where('key', 'min_sks')->first() ? \App\Models\Setting::where('key', 'min_sks')->first()->value : '100' }} SKS</li>
-                            <li>IPK minimal
-                                {{ \App\Models\Setting::where('key', 'min_gpa')->first() ? \App\Models\Setting::where('key', 'min_gpa')->first()->value : '2.75' }}</li>
+                            <li>Telah menyelesaikan minimal 100 SKS</li>
+                            <li>IPK minimal 2.75</li>
                             <li>Telah menyelesaikan mata kuliah Metode Pengabdian Masyarakat</li>
                             <li>Bebas tanggungan administrasi</li>
                             <li>Sehat jasmani dan rohani</li>
@@ -295,7 +276,7 @@
                         <h3>Biaya dan Fasilitas</h3>
                     </div>
                     <div class="card-body">
-                        <p><strong>Biaya KKN:</strong> Rp {{ number_format(\App\Models\Setting::where('key', 'registration_fee')->first() ? \App\Models\Setting::where('key', 'registration_fee')->first()->value : '500000', 0, ',', '.') }}</p>
+                        <p><strong>Biaya KKN:</strong> Rp 2.500.000</p>
                         <p>Sudah termasuk:</p>
                         <ul>
                             <li>Transportasi PP ke lokasi KKN</li>
@@ -317,34 +298,28 @@
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date">
-                            {{ \App\Models\Setting::where('key', 'registration_start')->first() ? \Carbon\Carbon::parse(\App\Models\Setting::where('key', 'registration_start')->first()->value)->format('d M') : '1 Mar' }} -
-                            {{ \App\Models\Setting::where('key', 'registration_end')->first() ? \Carbon\Carbon::parse(\App\Models\Setting::where('key', 'registration_end')->first()->value)->format('d M Y') : '15 Apr ' . date('Y') }}
-                        </div>
+                        <div class="timeline-date">1 - 15 Apr 2025</div>
                         <div>Pendaftaran</div>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date">1 - 5 Mei {{ date('Y') }}</div>
+                        <div class="timeline-date">1 - 5 Mei 2025</div>
                         <div>Pembekalan</div>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date">15 Mei {{ date('Y') }}</div>
+                        <div class="timeline-date">15 Mei 2025</div>
                         <div>Pemberangkatan</div>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <div class="timeline-date">
-                            {{ \App\Models\Setting::where('key', 'kkn_start')->first() ? \Carbon\Carbon::parse(\App\Models\Setting::where('key', 'kkn_start')->first()->value)->format('d M') : '15 Mei' }} -
-                            {{ \App\Models\Setting::where('key', 'kkn_end')->first() ? \Carbon\Carbon::parse(\App\Models\Setting::where('key', 'kkn_end')->first()->value)->format('d M Y') : '15 Jul ' . date('Y') }}
-                        </div>
+                        <div class="timeline-date">15 Mei - 15 Jul 2025</div>
                         <div>Pelaksanaan KKN</div>
                     </div>
                 </div>
@@ -354,35 +329,42 @@
         <section id="lokasi">
             <h2 class="section-title">Lokasi KKN</h2>
             <div class="cards">
-                @php
-                    $locations = \App\Models\Location::all()->groupBy(function($location) {
-                        return explode(',', $location->name)[0] ?? 'Lainnya';
-                    });
-                @endphp
-
-                @forelse($locations as $region => $locationGroup)
                 <div class="card">
                     <div class="card-header">
-                        <h3>{{ $region }}</h3>
+                        <h3>Jawa Barat</h3>
                     </div>
                     <div class="card-body">
                         <ul>
-                            @foreach($locationGroup as $location)
-                            <li>{{ $location->name }} ({{ $location->total_quota }} kuota)</li>
-                            @endforeach
+                            <li>Kabupaten Bogor (10 desa)</li>
+                            <li>Kabupaten Sukabumi (8 desa)</li>
+                            <li>Kabupaten Cianjur (5 desa)</li>
                         </ul>
                     </div>
                 </div>
-                @empty
                 <div class="card">
                     <div class="card-header">
-                        <h3>Lokasi KKN</h3>
+                        <h3>Jawa Tengah</h3>
                     </div>
                     <div class="card-body">
-                        <p>Lokasi KKN akan segera diumumkan. Mohon tunggu informasi lebih lanjut.</p>
+                        <ul>
+                            <li>Kabupaten Purbalingga (7 desa)</li>
+                            <li>Kabupaten Kebumen (6 desa)</li>
+                            <li>Kabupaten Magelang (5 desa)</li>
+                        </ul>
                     </div>
                 </div>
-                @endforelse
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Jawa Timur</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Kabupaten Malang (8 desa)</li>
+                            <li>Kabupaten Kediri (6 desa)</li>
+                            <li>Kabupaten Blitar (5 desa)</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -391,11 +373,11 @@
             <h2 class="section-title">Kontak</h2>
             <div class="card">
                 <div class="card-body">
-                    <p><strong>P3MM (Biro Pengembangan Prestasi dan Pengabdian Kepada Masyarakat oleh Mahasiswa di Universitas Langlangbuana)</strong></p>
+                    <p><strong>P3MM ( Biro Pengembangan Prestasi dan Pengabdian Kepada Masyarakat oleh Mahasiswa di Universitas Langlangbuana )</strong></p>
                     <p>Gedung Rektorat Lantai 3, Universitas Langlangbuana</p>
                     <p>Jl. Lengkong</p>
                     <p>Telepon: 081264768789</p>
-                    <p>Email: kkn@unla.ac.id</p>
+                    <p>Email: unla@gmail.com</p>
                     <p>Jam Operasional: Senin - Jumat, 08.00 - 16.00 WIB</p>
                 </div>
             </div>
@@ -403,7 +385,7 @@
     </div>
 
     <footer>
-        <p>&copy; {{ date('Y') }} P3MM (Biro Pengembangan Prestasi dan Pengabdian Kepada Masyarakat oleh Mahasiswa di Universitas Langlangbuana)</p>
+        <p>&copy; 2025 P3MM (Biro Pengembangan Prestasi dan Pengabdian Kepada Masyarakat oleh Mahasiswa di Universitas Langlangbuana)</p>
         <p>Jl. Lengkong</p>
     </footer>
 </body>

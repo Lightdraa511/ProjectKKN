@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('title', 'Login - Sistem Pendaftaran KKN')
 
 @section('content')
 <div class="container">
-    <h1>Sistem Pendaftaran KKN</h1>
+    <h1>Login Mahasiswa</h1>
 
     @if(session('success'))
     <div class="alert alert-success">
@@ -18,10 +18,8 @@
     </div>
     @endif
 
-    <div class="form-group">
-        <div class="alert alert-info">
-            Selamat datang di Sistem Pendaftaran KKN. Silakan login untuk melanjutkan pendaftaran.
-        </div>
+    <div class="alert alert-info">
+        Selamat datang di Sistem Pendaftaran KKN. Silakan login untuk melanjutkan pendaftaran.
     </div>
 
     <form method="POST" action="{{ route('login') }}">
@@ -47,8 +45,10 @@
 
         <div class="links">
             <a href="{{ route('register') }}">Belum memiliki akun? Daftar</a>
-            <br>
+            <br><br>
             <a href="{{ route('admin.login') }}" style="color: #dc3545;">Login sebagai Admin</a>
+            <br><br>
+            <a href="{{ route('landing') }}" class="back-to-home">← Kembali ke Beranda</a>
         </div>
     </form>
 </div>

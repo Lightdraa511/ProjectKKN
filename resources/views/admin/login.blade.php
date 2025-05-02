@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('title', 'Admin Login - Sistem Pendaftaran KKN')
 
@@ -18,10 +18,8 @@
     </div>
     @endif
 
-    <div class="form-group">
-        <div class="alert alert-info">
-            Silakan login sebagai admin untuk mengelola sistem KKN.
-        </div>
+    <div class="alert alert-info">
+        Silakan login sebagai admin untuk mengelola sistem KKN.
     </div>
 
     <form method="POST" action="{{ route('admin.login.post') }}">
@@ -47,6 +45,8 @@
 
         <div class="links">
             <a href="{{ route('login') }}">Login sebagai Mahasiswa</a>
+            <br><br>
+            <a href="{{ route('landing') }}" class="back-to-home">← Kembali ke Beranda</a>
         </div>
     </form>
 </div>
