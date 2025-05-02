@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\Location;
 use App\Models\User;
 use App\Models\Faculty;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -119,27 +120,20 @@ class AdminController extends Controller
      */
     public function settings()
     {
-        // Ambil data pengaturan dari database atau dari file konfigurasi
-        $settings = [
-            'registration_start' => config('kkn.registration_start', now()->format('Y-m-d')),
-            'registration_end' => config('kkn.registration_end', now()->addMonths(1)->format('Y-m-d')),
-            'kkn_start' => config('kkn.kkn_start', now()->addMonths(2)->format('Y-m-d')),
-            'kkn_end' => config('kkn.kkn_end', now()->addMonths(3)->format('Y-m-d')),
-            'registration_fee' => config('kkn.registration_fee', 500000),
-            'min_sks' => config('kkn.min_sks', 100),
-            'min_gpa' => config('kkn.min_gpa', 2.75),
-            'announcement' => config('kkn.announcement', '')
-        ];
+        // Ambil semua pengaturan dari database dengan nilai terformat
+        $settings = Setting::getAllFormatted();
 
         // Tambahkan statistik untuk ditampilkan di sidebar
         $totalUsers = User::count();
         $completedRegistrations = User::where('profile_completed', true)->count();
         $totalLocations = Location::count();
+        $isRegistrationOpen = Setting::isRegistrationOpen();
 
         return view('admin.settings', array_merge($settings, [
             'totalUsers' => $totalUsers,
             'completedRegistrations' => $completedRegistrations,
             'totalLocations' => $totalLocations,
+            'isRegistrationOpen' => $isRegistrationOpen,
         ]));
     }
 
@@ -162,13 +156,14 @@ class AdminController extends Controller
             'announcement' => 'nullable|string',
         ]);
 
-        // Simpan pengaturan (misalnya ke dalam database atau file konfigurasi)
-        // Di sini kita akan menggunakan config untuk sementara
+        // Simpan pengaturan ke database
         foreach ($validated as $key => $value) {
-            config(['kkn.' . $key => $value]);
+            $setting = Setting::where('key', $key)->first();
+            if ($setting) {
+                $setting->value = $value;
+                $setting->save();
+            }
         }
-
-        // Dalam implementasi nyata, simpan ke dalam database atau file konfigurasi
 
         return redirect()->route('admin.settings')
             ->with('success', 'Pengaturan berhasil disimpan.');

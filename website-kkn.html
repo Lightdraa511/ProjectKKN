@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Pendaftaran KKN Universitas Langlangbuana</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #005691;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo img {
+            height: 60px;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/400');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #ffa500;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #e69500;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            color: #005691;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #005691;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+        .card-body ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .card-body p {
+            margin-bottom: 1rem;
+        }
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 3rem 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #005691;
+            z-index: 1;
+        }
+        .timeline-item {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 20%;
+        }
+        .timeline-dot {
+            width: 30px;
+            height: 30px;
+            background-color: #005691;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+        }
+        .timeline-content {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        .timeline-date {
+            font-weight: bold;
+            color: #ffa500;
+            margin-bottom: 0.5rem;
+        }
+        .announcement {
+            background-color: #f8f0d3;
+            border-left: 5px solid #ffa500;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        .form-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-check {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="/logo.png" alt="Logo Universitas">
+            <h1>Universitas Langlangbuana</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#beranda">Beranda</a></li>
+                <li><a href="#informasi">Informasi</a></li>
+                <li><a href="#jadwal">Jadwal</a></li>
+                <li><a href="#lokasi">Lokasi</a></li>
+                <li><a href="#kontak">Kontak</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="beranda">
+        <h1>Pendaftaran Kuliah Kerja Nyata (KKN) 2025</h1>
+        <p>KKN merupakan program pengabdian kepada masyarakat yang memberikan pengalaman belajar dan bekerja bagi mahasiswa dalam membangun kehidupan masyarakat yang lebih baik.</p>
+        <a href="#pendaftaran" class="btn">Daftar Sekarang</a>
+    </section>
+
+    <div class="container">
+        <div class="announcement">
+            <h3>Pengumuman Penting!</h3>
+            <p>Pendaftaran KKN Periode I Tahun 2025 telah dibuka mulai tanggal 1 Maret 2025 dan akan ditutup pada tanggal 15 April 2025. Pastikan untuk melengkapi semua persyaratan sebelum batas waktu pendaftaran.</p>
+        </div>
+
+        <section id="informasi">
+            <h2 class="section-title">Informasi KKN</h2>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Persyaratan</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Mahasiswa aktif minimal semester 6</li>
+                            <li>Telah menyelesaikan minimal 100 SKS</li>
+                            <li>IPK minimal 2.75</li>
+                            <li>Telah menyelesaikan mata kuliah Metode Pengabdian Masyarakat</li>
+                            <li>Bebas tanggungan administrasi</li>
+                            <li>Sehat jasmani dan rohani</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Dokumen Yang Diperlukan</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Fotokopi KTM (Kartu Tanda Mahasiswa)</li>
+                            <li>Pas foto berwarna 4x6 (2 lembar)</li>
+                            <li>Transkrip nilai terbaru</li>
+                            <li>Bukti pembayaran biaya KKN</li>
+                            <li>Surat izin orang tua/wali</li>
+                            <li>Surat keterangan sehat dari dokter</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Biaya dan Fasilitas</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Biaya KKN:</strong> Rp 2.500.000</p>
+                        <p>Sudah termasuk:</p>
+                        <ul>
+                            <li>Transportasi PP ke lokasi KKN</li>
+                            <li>Akomodasi selama di lokasi</li>
+                            <li>Seragam KKN (2 set)</li>
+                            <li>Topi dan ID Card</li>
+                            <li>Biaya operasional kegiatan</li>
+                            <li>Pembekalan dan pelatihan</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="jadwal">
+            <br>
+            <h2 class="section-title">Jadwal Pelaksanaan</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">1 - 15 Apr 2025</div>
+                        <div>Pendaftaran</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">1 - 5 Mei 2025</div>
+                        <div>Pembekalan</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">15 Mei 2025</div>
+                        <div>Pemberangkatan</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">15 Mei - 15 Jul 2025</div>
+                        <div>Pelaksanaan KKN</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="lokasi">
+            <h2 class="section-title">Lokasi KKN</h2>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Jawa Barat</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Kabupaten Bogor (10 desa)</li>
+                            <li>Kabupaten Sukabumi (8 desa)</li>
+                            <li>Kabupaten Cianjur (5 desa)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Jawa Tengah</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Kabupaten Purbalingga (7 desa)</li>
+                            <li>Kabupaten Kebumen (6 desa)</li>
+                            <li>Kabupaten Magelang (5 desa)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Jawa Timur</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Kabupaten Malang (8 desa)</li>
+                            <li>Kabupaten Kediri (6 desa)</li>
+                            <li>Kabupaten Blitar (5 desa)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="kontak">
+            <br>
+            <h2 class="section-title">Kontak</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p><strong>P3MM ( Biro Pengembangan Prestasi dan Pengabdian Kepada Masyarakat oleh Mahasiswa di Universitas Langlangbuana )</strong></p>
+                    <p>Gedung Rektorat Lantai 3, Universitas Langlangbuana</p>
+                    <p>Jl. Lengkong</p>
+                    <p>Telepon: 081264768789</p>
+                    <p>Email: unla@gmail.com</p>
+                    <p>Jam Operasional: Senin - Jumat, 08.00 - 16.00 WIB</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 P3MM (Biro Pengembangan Prestasi dan Pengabdian Kepada Masyarakat oleh Mahasiswa di Universitas Langlangbuana)</p>
+        <p>Jl. Lengkong</p>
+    </footer>
+</body>
+</html>
