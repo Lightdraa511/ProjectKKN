@@ -1,0 +1,2442 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Pendaftaran KKNM</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Custom Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            blue: {
+              50: '#f0f5ff',
+              100: '#e0eaff',
+              200: '#c7d9ff',
+              300: '#a5bfff',
+              400: '#7e9dff',
+              500: '#5a74fc', 
+              600: '#3b82f6',
+              700: '#2563eb',
+              800: '#1d4ed8',
+              900: '#1e40af',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f3f4f6;
+    }
+    .dark body {
+      background-color: #111827;
+      color: #f9fafb;
+    }
+    .card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      padding: 1.5rem;
+    }
+    .dark .card {
+      background-color: #1f2937;
+      border-color: #374151;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.625rem 1.25rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background-color: #3b82f6;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #2563eb;
+    }
+    .btn-outline {
+      border: 1px solid #d1d5db;
+      color: #4b5563;
+      background-color: white;
+    }
+    .dark .btn-outline {
+      border-color: #4b5563;
+      color: #d1d5db;
+      background-color: #1f2937;
+    }
+    .btn-outline:hover {
+      background-color: #f9fafb;
+    }
+    .dark .btn-outline:hover {
+      background-color: #374151;
+    }
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+    
+    /* Dark Mode Toggle */
+    .theme-toggle {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      color: #4b5563;
+    }
+    .dark .theme-toggle {
+      color: #e5e7eb;
+    }
+    .theme-toggle:hover {
+      background-color: #f3f4f6;
+    }
+    .dark .theme-toggle:hover {
+      background-color: #374151;
+    }
+    
+    /* Dark mode specific styles */
+    .dark .bg-white {
+      background-color: #1f2937;
+    }
+    .dark .bg-gray-50 {
+      background-color: #111827;
+    }
+    .dark .bg-gray-100 {
+      background-color: #1f2937;
+    }
+    .dark .bg-blue-50 {
+      background-color: rgba(30, 58, 138, 0.5);
+    }
+    .dark .border-gray-200 {
+      border-color: #374151;
+    }
+    .dark .text-gray-500 {
+      color: #9ca3af;
+    }
+    .dark .text-gray-600 {
+      color: #d1d5db;
+    }
+    .dark .text-gray-700 {
+      color: #e5e7eb;
+    }
+    .dark .text-gray-900 {
+      color: #f9fafb;
+    }
+    .dark .hover\:bg-gray-100:hover {
+      background-color: #374151;
+    }
+    
+    /* Input styles for dark mode */
+    .dark input[type="text"],
+    .dark input[type="email"],
+    .dark input[type="password"],
+    .dark input[type="tel"],
+    .dark textarea,
+    .dark select {
+      background-color: #374151;
+      border-color: #4b5563;
+      color: #f9fafb;
+    }
+    
+    /* Input styles for light mode */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    textarea,
+    select {
+      background-color: #f9fafb;
+      border-color: #d1d5db;
+    }
+    
+    .dark input::placeholder {
+      color: #9ca3af;
+    }
+    
+    /* Table styles for dark mode */
+    .dark th {
+      background-color: #1f2937;
+    }
+    .dark td {
+      border-color: #374151;
+    }
+    .dark tr:hover {
+      background-color: #374151;
+    }
+    
+    /* Pada elemen input dan select di mode terang */
+    .bg-gray-50 {
+      background-color: #f1f5f9;
+    }
+    .bg-gray-100 {
+      background-color: #f3f4f6;
+    }
+    .bg-blue-50 {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+  <div id="app" class="flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 fixed z-30 w-full">
+      <div class="px-3 py-3 lg:px-5 lg:pl-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center justify-start">
+            <button
+              id="toggle-sidebar-button"
+              class="lg:hidden mr-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            >
+              <i class="fas fa-bars w-6 h-6"></i>
+            </button>
+            <a href="#" id="logo-link" class="flex items-center">
+              <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-blue-600 dark:text-blue-400">
+                KKNM App
+              </span>
+            </a>
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <!-- Theme Toggle Button -->
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+              <i class="fas fa-moon w-5 h-5 dark:hidden"></i>
+              <i class="fas fa-sun w-5 h-5 hidden dark:block"></i>
+            </button>
+            
+            <!-- User is logged in view -->
+            <div id="user-logged-in" class="flex items-center gap-3">
+              <button class="relative p-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                <i class="fas fa-bell w-6 h-6"></i>
+                <span class="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full">
+                  2
+                </span>
+              </button>
+              
+              <div class="flex items-center">
+                <div class="hidden md:flex flex-col mr-3 text-right">
+                  <span class="text-sm font-medium text-gray-900 dark:text-white" id="user-name">
+                    Mahasiswa Demo
+                  </span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400" id="user-email">
+                    demo@student.ac.id
+                  </span>
+                </div>
+                <div class="relative">
+                  <div class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300">
+                    <i class="fas fa-user-circle w-8 h-8 text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+              
+              <button 
+                id="logout-button"
+                class="flex items-center text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+              >
+                <i class="fas fa-sign-out-alt w-5 h-5"></i>
+                <span class="ml-1 text-sm hidden md:inline">Keluar</span>
+              </button>
+            </div>
+            
+            <!-- User is not logged in view -->
+            <div id="user-not-logged-in" class="hidden">
+              <a 
+                href="#login" 
+                data-page="login"
+                class="py-2 px-3 text-sm font-medium text-gray-900 dark:text-white rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 mr-2"
+              >
+                Masuk
+              </a>
+              <a 
+                href="#register" 
+                data-page="register"
+                class="py-2 px-3 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+              >
+                Daftar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+    <div class="flex pt-16 flex-grow">
+      <!-- Sidebar -->
+      <aside 
+        id="sidebar" 
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-16 transition-transform bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 lg:translate-x-0"
+        aria-label="Sidebar"
+      >
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+          <div id="close-sidebar" class="lg:hidden absolute right-2 top-2 p-1">
+            <button class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+              <i class="fas fa-times w-5 h-5"></i>
+            </button>
+          </div>
+          
+          <ul class="space-y-2 font-medium mt-2">
+            <li>
+              <a 
+                href="#dashboard" 
+                data-page="dashboard"
+                class="flex items-center p-2 text-gray-900 dark:text-white rounded-lg bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300"
+              >
+                <i class="fas fa-home w-5 h-5"></i>
+                <span class="ml-3">Dashboard</span>
+              </a>
+            </li>
+            
+            <li>
+              <a 
+                href="#profile" 
+                data-page="profile"
+                class="flex items-center p-2 text-gray-900 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <i class="fas fa-user w-5 h-5"></i>
+                <span class="ml-3">Profil Saya</span>
+              </a>
+            </li>
+            
+            <li>
+              <a 
+                href="#registration" 
+                data-page="registration"
+                class="flex items-center p-2 text-gray-900 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <i class="fas fa-file-alt w-5 h-5"></i>
+                <span class="ml-3">Pendaftaran KKNM</span>
+              </a>
+            </li>
+            
+            <li>
+              <a 
+                href="#payment" 
+                data-page="payment"
+                class="flex items-center p-2 text-gray-900 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <i class="fas fa-credit-card w-5 h-5"></i>
+                <span class="ml-3">Pembayaran</span>
+              </a>
+            </li>
+            
+            <li>
+              <a 
+                href="#location" 
+                data-page="location"
+                class="flex items-center p-2 text-gray-900 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <i class="fas fa-map-marker-alt w-5 h-5"></i>
+                <span class="ml-3">Lokasi KKNM</span>
+              </a>
+            </li>
+            
+            <li class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+              <a 
+                href="#help" 
+                data-page="help"
+                class="flex items-center p-2 text-gray-900 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <i class="fas fa-question-circle w-5 h-5"></i>
+                <span class="ml-3">Bantuan</span>
+              </a>
+            </li>
+          </ul>
+          
+          <div class="mt-6 p-3 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-800">
+            <p class="text-sm text-green-800 dark:text-green-200 flex items-center">
+              <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+              Status Pembayaran: Lunas
+            </p>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Main Content -->
+      <div id="main-content" class="w-full bg-gray-100 dark:bg-gray-900 relative lg:ml-64 flex flex-col min-h-screen">
+        <main class="p-4 md:p-6 flex-grow">
+          <div id="page-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page active space-y-6">
+              <!-- Hero Section -->
+              <div class="card bg-gradient-to-br from-blue-600 to-blue-800 text-white p-0">
+                <div class="py-6 px-6">
+                  <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                    Selamat Datang di Sistem Pendaftaran KKNM
+                  </h1>
+                  <p class="text-blue-100 mb-6 text-lg">
+                    Kuliah Kerja Nyata Mahasiswa - Pengabdian kepada masyarakat sebagai bagian integral dari Tri Dharma Perguruan Tinggi
+                  </p>
+                  
+                  <div class="space-y-4">
+                    <div class="p-4 bg-white/10 backdrop-blur-sm rounded-lg">
+                      <h3 class="font-semibold mb-1">Status Pendaftaran Anda:</h3>
+                      <div class="flex items-center">
+                        <span class="w-3 h-3 rounded-full mr-2 bg-yellow-400"></span>
+                        <span>Belum Mendaftar</span>
+                      </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3">
+                      <a href="#payment" data-page="payment" class="btn bg-white text-blue-700 hover:bg-blue-50">
+                        Lakukan Pembayaran
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Informasi Umum -->
+              <div class="card">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Tentang KKNM</h2>
+                <p class="text-gray-700 mb-6">
+                  Kuliah Kerja Nyata Mahasiswa (KKNM) adalah salah satu bentuk pengabdian kepada masyarakat yang dilakukan oleh mahasiswa dengan pendekatan lintas keilmuan dan sektoral pada waktu dan daerah tertentu. KKNM merupakan bagian integral dari proses pendidikan yang mempunyai ciri-ciri khusus.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div class="flex items-start p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="w-8 h-8 text-blue-600 mr-3 flex items-center justify-center">
+                      <i class="fas fa-book-open"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold mb-1">Edukasi</h3>
+                      <p class="text-sm text-gray-600">
+                        Memberikan pengalaman belajar bagi mahasiswa tentang pembangunan masyarakat
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="w-8 h-8 text-blue-600 mr-3 flex items-center justify-center">
+                      <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold mb-1">Pengabdian</h3>
+                      <p class="text-sm text-gray-600">
+                        Memberdayakan masyarakat melalui penerapan ilmu pengetahuan
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="w-8 h-8 text-blue-600 mr-3 flex items-center justify-center">
+                      <i class="fas fa-award"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold mb-1">Pengalaman</h3>
+                      <p class="text-sm text-gray-600">
+                        Melatih soft-skill kepemimpinan dan kerja tim dalam lingkungan nyata
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Timeline atau Jadwal -->
+              <div class="card">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Jadwal Pelaksanaan KKNM</h2>
+                
+                <div class="relative border-l-2 border-blue-500 pb-8 pl-8 ml-4">
+                  <div class="mb-10 relative">
+                    <div class="absolute -left-10 bg-blue-500 w-6 h-6 rounded-full flex items-center justify-center">
+                      <i class="fas fa-calendar-alt w-3 h-3 text-white"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold mb-1">Pendaftaran</h3>
+                      <p class="text-sm text-gray-700">1 Mei - 15 Mei 2025</p>
+                      <p class="text-sm text-gray-600 mt-1">
+                        Mahasiswa melakukan pendaftaran online melalui sistem ini
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-10 relative">
+                    <div class="absolute -left-10 bg-blue-500 w-6 h-6 rounded-full flex items-center justify-center">
+                      <i class="fas fa-file-alt w-3 h-3 text-white"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold mb-1">Seleksi dan Penempatan</h3>
+                      <p class="text-sm text-gray-700">16 Mei - 31 Mei 2025</p>
+                      <p class="text-sm text-gray-600 mt-1">
+                        Proses verifikasi dan penempatan berdasarkan pilihan lokasi
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-10 relative">
+                    <div class="absolute -left-10 bg-blue-500 w-6 h-6 rounded-full flex items-center justify-center">
+                      <i class="fas fa-book-open w-3 h-3 text-white"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold mb-1">Pembekalan</h3>
+                      <p class="text-sm text-gray-700">1 Juni - 15 Juni 2025</p>
+                      <p class="text-sm text-gray-600 mt-1">
+                        Mahasiswa peserta KKNM mengikuti pembekalan dan orientasi
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="relative">
+                    <div class="absolute -left-10 bg-blue-500 w-6 h-6 rounded-full flex items-center justify-center">
+                      <i class="fas fa-map-marker-alt w-3 h-3 text-white"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold mb-1">Pelaksanaan KKNM</h3>
+                      <p class="text-sm text-gray-700">1 Juli - 31 Agustus 2025</p>
+                      <p class="text-sm text-gray-600 mt-1">
+                        Pelaksanaan kegiatan KKNM di lokasi yang telah ditentukan
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- CTA Section -->
+              <div class="card bg-gray-100">
+                <div class="text-center py-6">
+                  <h2 class="text-2xl font-bold text-gray-900 mb-2">Siap Mendaftar KKNM?</h2>
+                  <p class="text-gray-600 mb-6">
+                    Segera daftar dan ikuti program KKNM untuk pengalaman belajar yang berharga dan berkontribusi pada masyarakat.
+                  </p>
+                  
+                  <a href="#registration" data-page="registration" class="btn btn-primary">
+                    Daftar KKNM Sekarang
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Location Page -->
+            <div id="location-page" class="page space-y-6">
+              <div class="card">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <i class="fas fa-map-marker-alt w-6 h-6 text-blue-600 mr-2"></i>
+                  Lokasi KKNM
+                </h2>
+                
+                <div class="mb-6">
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <i class="fas fa-search w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <input
+                      type="text"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                      placeholder="Cari lokasi KKNM..."
+                    />
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <!-- Location Item 1 -->
+                  <div class="border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-white border-gray-200">
+                    <div class="p-5">
+                      <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Desa Sukamaju</h3>
+                        <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                          Tersedia
+                        </span>
+                      </div>
+                      
+                      <p class="text-sm text-gray-600 mb-3 flex items-center">
+                        <i class="fas fa-map-marker-alt w-4 h-4 mr-1 flex-shrink-0 text-gray-500"></i>
+                        <span>Kecamatan Cianjur, Kabupaten Cianjur, Jawa Barat</span>
+                      </p>
+                      
+                      <div class="mb-3 flex items-center">
+                        <i class="fas fa-users w-4 h-4 mr-1 text-gray-500"></i>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                          <div class="bg-blue-600 h-2.5 rounded-full" style="width: 40%"></div>
+                        </div>
+                        <span class="ml-2 text-xs text-gray-600">8/20</span>
+                      </div>
+                      
+                      <p class="text-sm text-gray-600 mb-4">
+                        Lokasi KKN fokus pada pengembangan pendidikan dan pemberdayaan ekonomi masyarakat desa.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <!-- Location Item 2 -->
+                  <div class="border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-white border-gray-200">
+                    <div class="p-5">
+                      <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Desa Harapan Jaya</h3>
+                        <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                          Tersedia
+                        </span>
+                      </div>
+                      
+                      <p class="text-sm text-gray-600 mb-3 flex items-center">
+                        <i class="fas fa-map-marker-alt w-4 h-4 mr-1 flex-shrink-0 text-gray-500"></i>
+                        <span>Kecamatan Padang Cermin, Kabupaten Pesawaran, Lampung</span>
+                      </p>
+                      
+                      <div class="mb-3 flex items-center">
+                        <i class="fas fa-users w-4 h-4 mr-1 text-gray-500"></i>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                          <div class="bg-blue-600 h-2.5 rounded-full" style="width: 66%"></div>
+                        </div>
+                        <span class="ml-2 text-xs text-gray-600">10/15</span>
+                      </div>
+                      
+                      <p class="text-sm text-gray-600 mb-4">
+                        Fokus pada program lingkungan dan pariwisata berkelanjutan.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <!-- Location Item 3 -->
+                  <div class="border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-white border-gray-200">
+                    <div class="p-5">
+                      <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Kelurahan Sejahtera</h3>
+                        <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                          Tersedia
+                        </span>
+                      </div>
+                      
+                      <p class="text-sm text-gray-600 mb-3 flex items-center">
+                        <i class="fas fa-map-marker-alt w-4 h-4 mr-1 flex-shrink-0 text-gray-500"></i>
+                        <span>Kecamatan Lowokwaru, Kota Malang, Jawa Timur</span>
+                      </p>
+                      
+                      <div class="mb-3 flex items-center">
+                        <i class="fas fa-users w-4 h-4 mr-1 text-gray-500"></i>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                          <div class="bg-blue-600 h-2.5 rounded-full" style="width: 60%"></div>
+                        </div>
+                        <span class="ml-2 text-xs text-gray-600">15/25</span>
+                      </div>
+                      
+                      <p class="text-sm text-gray-600 mb-4">
+                        Program KKN perkotaan dengan fokus pada digitalisasi UMKM dan literasi digital.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+              <div class="space-y-6">
+                <div class="card w-full">
+                  <div class="flex items-center mb-6">
+                    <i class="fas fa-user w-6 h-6 text-blue-600 dark:text-blue-400 mr-2"></i>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Profil Saya</h2>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-1">
+                      <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-center">
+                        <div class="w-32 h-32 mx-auto bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                          <i class="fas fa-user text-5xl text-gray-300"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-1 dark:text-white">Mahasiswa Demo</h3>
+                        <p class="text-md text-gray-600 dark:text-gray-300 mb-4">demo@student.ac.id</p>
+                        <button class="w-full btn bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 mt-2">
+                          <i class="fas fa-camera mr-1"></i> Ubah Foto
+                        </button>
+                      </div>
+                      
+                      <div class="mt-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                        <h3 class="font-semibold text-lg mb-4 pb-2 border-b border-gray-200 dark:border-gray-700 dark:text-white">Status</h3>
+                        <div class="space-y-4">
+                          <div>
+                            <p class="text-gray-600 dark:text-gray-300 mb-2">Pendaftaran KKNM</p>
+                            <div class="flex items-center space-x-2">
+                              <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                              <span class="font-medium dark:text-white">Belum Mendaftar</span>
+                            </div>
+                          </div>
+                          <div>
+                            <p class="text-gray-600 dark:text-gray-300 mb-2">Pembayaran</p>
+                            <div class="flex items-center space-x-2">
+                              <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                              <span class="font-medium dark:text-white">Lunas</span>
+                            </div>
+                          </div>
+                          <div>
+                            <p class="text-gray-600 dark:text-gray-300 mb-2">Pemilihan Lokasi</p>
+                            <div class="flex items-center space-x-2">
+                              <span class="w-3 h-3 rounded-full bg-gray-400"></span>
+                              <span class="font-medium dark:text-white">Belum Memilih</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                      <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+                        <h3 class="font-semibold text-lg mb-4 pb-2 border-b border-gray-200 dark:border-gray-700 dark:text-white">Informasi Pribadi</h3>
+                        <form class="space-y-5">
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Nama Lengkap
+                              </label>
+                              <input
+                                type="text"
+                                class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                value="Mahasiswa Demo"
+                              />
+                            </div>
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                NIM
+                              </label>
+                              <input
+                                type="text"
+                                class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                value="12345678"
+                              />
+                            </div>
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Email
+                              </label>
+                              <input
+                                type="email"
+                                class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                value="demo@student.ac.id"
+                              />
+                            </div>
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                No. Telepon
+                              </label>
+                              <input
+                                type="tel"
+                                class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                value="081234567890"
+                              />
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                              Alamat
+                            </label>
+                            <textarea
+                              class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              rows="3"
+                            >Jl. Contoh No. 123, Kota Contoh</textarea>
+                          </div>
+                          
+                          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Fakultas
+                              </label>
+                              <select
+                                class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              >
+                                <option>Teknik</option>
+                                <option>Ekonomi</option>
+                                <option>Hukum</option>
+                                <option>Kedokteran</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Program Studi
+                              </label>
+                              <select
+                                class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              >
+                                <option>Teknik Informatika</option>
+                                <option>Sistem Informasi</option>
+                                <option>Teknik Komputer</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Angkatan
+                              </label>
+                              <select
+                                class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              >
+                                <option>2021</option>
+                                <option>2022</option>
+                                <option>2023</option>
+                              </select>
+                            </div>
+                          </div>
+                          
+                          <div class="pt-2">
+                            <button type="submit" class="btn btn-primary px-6 py-3">
+                              <i class="fas fa-save mr-2"></i> Simpan Perubahan
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                      
+                      <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                        <h3 class="font-semibold text-lg mb-4 pb-2 border-b border-gray-200 dark:border-gray-700 dark:text-white">Ubah Password</h3>
+                        <div class="flex justify-center">
+                          <form class="space-y-4 w-full max-w-md">
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Password Lama
+                              </label>
+                              <input
+                                type="password"
+                                class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="••••••••"
+                              />
+                            </div>
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Password Baru
+                              </label>
+                              <input
+                                type="password"
+                                class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="••••••••"
+                              />
+                            </div>
+                            <div>
+                              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Konfirmasi Password Baru
+                              </label>
+                              <input
+                                type="password"
+                                class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="••••••••"
+                              />
+                            </div>
+                            <div class="pt-3 flex justify-center">
+                              <button type="submit" class="btn bg-gray-800 dark:bg-gray-700 text-white hover:bg-gray-700 dark:hover:bg-gray-600 px-6 py-3">
+                                <i class="fas fa-lock mr-2"></i> Ubah Password
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Registration Page -->
+            <div id="registration-page" class="page">
+              <div class="space-y-6">
+                <div class="card">
+                  <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <i class="fas fa-file-alt w-6 h-6 text-blue-600 mr-2"></i>
+                    Pendaftaran KKNM
+                  </h2>
+                  
+                  <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                    <div class="flex">
+                      <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle w-5 h-5 text-blue-600"></i>
+                      </div>
+                      <div class="ml-3">
+                        <p class="text-sm text-blue-700">
+                          Silakan lengkapi semua informasi di bawah ini untuk mendaftar KKNM. Pastikan data yang diisi sesuai dengan yang tertera di akademik.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-6">
+                    <div class="relative">
+                      <div class="flex items-center justify-between">
+                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                          <div class="bg-blue-600 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                      </div>
+                      <div class="mt-2 flex justify-between text-xs text-gray-600">
+                        <span>Data Pribadi</span>
+                        <span>Pilih Lokasi</span>
+                        <span>Konfirmasi</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <form>
+                    <div class="space-y-6">
+                      <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Data Pribadi</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              Nama Lengkap <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value="Mahasiswa Demo"
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              required
+                              readonly
+                            />
+                            <p class="mt-1 text-xs text-gray-500">Data diambil dari profil</p>
+                          </div>
+                          
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              NIM <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value="12345678"
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              required
+                              readonly
+                            />
+                            <p class="mt-1 text-xs text-gray-500">Data diambil dari profil</p>
+                          </div>
+                          
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              Program Studi <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value="Teknik Informatika"
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              required
+                              readonly
+                            />
+                            <p class="mt-1 text-xs text-gray-500">Data diambil dari profil</p>
+                          </div>
+                          
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              IPK <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value="3.75"
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              required
+                              readonly
+                            />
+                            <p class="mt-1 text-xs text-gray-500">Data diambil dari sistem akademik</p>
+                          </div>
+                          
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              Alamat Tinggal <span class="text-red-500">*</span>
+                            </label>
+                            <textarea
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              rows="2"
+                              required
+                            >Jl. Contoh No. 123, Kota Contoh</textarea>
+                          </div>
+                          
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              Nomor Telepon <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="tel"
+                              value="081234567890"
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Tambahan</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              Golongan Darah
+                            </label>
+                            <select
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="">Pilih Golongan Darah</option>
+                              <option value="A">A</option>
+                              <option value="B">B</option>
+                              <option value="AB">AB</option>
+                              <option value="O">O</option>
+                            </select>
+                          </div>
+                          
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              Riwayat Penyakit
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="Jika ada"
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              Kontak Darurat <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="Nama kontak darurat"
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 mb-2"
+                              required
+                            />
+                            <input
+                              type="tel"
+                              placeholder="Nomor telepon kontak darurat"
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              required
+                            />
+                          </div>
+                          
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              Keahlian
+                            </label>
+                            <textarea
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                              rows="2"
+                              placeholder="Tuliskan keahlian yang dimiliki"
+                            ></textarea>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Berkas Pendaftaran</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              Pas Foto (3x4) <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex items-center justify-center w-full">
+                              <label class="flex flex-col border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 w-full">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                  <i class="fas fa-cloud-upload-alt text-gray-500 mb-2"></i>
+                                  <p class="text-xs text-gray-500">
+                                    <span class="font-semibold">Klik untuk upload</span> atau drag and drop
+                                  </p>
+                                  <p class="text-xs text-gray-500">PNG atau JPG (Maks. 2MB)</p>
+                                </div>
+                                <input type="file" class="hidden" accept="image/png, image/jpeg" />
+                              </label>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                              Surat Keterangan Sehat <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex items-center justify-center w-full">
+                              <label class="flex flex-col border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 w-full">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                  <i class="fas fa-cloud-upload-alt text-gray-500 mb-2"></i>
+                                  <p class="text-xs text-gray-500">
+                                    <span class="font-semibold">Klik untuk upload</span> atau drag and drop
+                                  </p>
+                                  <p class="text-xs text-gray-500">PDF (Maks. 5MB)</p>
+                                </div>
+                                <input type="file" class="hidden" accept="application/pdf" />
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="flex items-center pt-4">
+                        <input
+                          id="agreement"
+                          type="checkbox"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <label for="agreement" class="ml-2 text-sm text-gray-700">
+                          Saya menyatakan bahwa data yang saya isi adalah benar dan saya bersedia mengikuti semua ketentuan dan peraturan KKNM.
+                        </label>
+                      </div>
+                      
+                      <div class="pt-2 flex justify-end space-x-3">
+                        <button type="button" class="btn btn-outline">
+                          Simpan Draft
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                          Lanjutkan ke Pilih Lokasi
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Payment Page -->
+            <div id="payment-page" class="page">
+              <div class="space-y-4 sm:space-y-6">
+                <div class="card w-full p-3 sm:p-5">
+                  <div class="flex items-center mb-3 sm:mb-4">
+                    <i class="fas fa-credit-card w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400 mr-2"></i>
+                    <h2 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Pembayaran KKNM</h2>
+                  </div>
+                  
+                  <div class="bg-green-50 dark:bg-green-900/30 border-l-4 border-green-500 p-2.5 sm:p-4 mb-3 sm:mb-5 rounded-r-lg">
+                    <div class="flex">
+                      <div class="flex-shrink-0">
+                        <i class="fas fa-check-circle w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400 mt-0.5"></i>
+                      </div>
+                      <div class="ml-2 sm:ml-3">
+                        <h3 class="text-sm sm:text-base font-medium text-green-800 dark:text-green-200">Pembayaran Berhasil</h3>
+                        <div class="mt-0.5 sm:mt-1 text-xs sm:text-sm text-green-700 dark:text-green-300">
+                          <p>Anda telah melakukan pembayaran untuk biaya pendaftaran KKNM.</p>
+                        </div>
+                        <div class="mt-1.5 sm:mt-3">
+                          <a href="#registration" data-page="registration" class="inline-flex items-center text-xs sm:text-sm font-medium text-green-800 dark:text-green-200 hover:text-green-700 dark:hover:text-green-100">
+                            Lanjut ke Pendaftaran <i class="fas fa-arrow-right ml-1 text-xs sm:text-sm"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-4 sm:mb-5">
+                    <h3 class="text-sm sm:text-base font-medium text-gray-900 dark:text-white mb-2 sm:mb-3 pb-1.5 sm:pb-2 border-b border-gray-200 dark:border-gray-700">
+                      Detail Pembayaran
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
+                      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1">
+                        <span class="text-gray-500 dark:text-gray-400">ID Pembayaran</span>
+                        <span class="font-medium text-gray-900 dark:text-white">KKNM-PAY-20250412-001</span>
+                      </div>
+                      
+                      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1">
+                        <span class="text-gray-500 dark:text-gray-400">Tanggal Pembayaran</span>
+                        <span class="font-medium text-gray-900 dark:text-white">12 April 2025, 14:30 WIB</span>
+                      </div>
+                      
+                      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1">
+                        <span class="text-gray-500 dark:text-gray-400">Metode Pembayaran</span>
+                        <span class="font-medium text-gray-900 dark:text-white">Transfer Bank (BNI)</span>
+                      </div>
+                      
+                      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1">
+                        <span class="text-gray-500 dark:text-gray-400">Status</span>
+                        <span class="inline-flex mt-0.5 sm:mt-0">
+                          <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">Sukses</span>
+                        </span>
+                      </div>
+                      
+                      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1">
+                        <span class="text-gray-500 dark:text-gray-400">Nama</span>
+                        <span class="font-medium text-gray-900 dark:text-white">Mahasiswa Demo</span>
+                      </div>
+                      
+                      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1">
+                        <span class="text-gray-500 dark:text-gray-400">Deskripsi</span>
+                        <span class="font-medium text-gray-900 dark:text-white">Biaya Pendaftaran KKNM Tahun 2025</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-4 sm:mb-5">
+                    <h3 class="text-sm sm:text-base font-medium text-gray-900 dark:text-white mb-2 sm:mb-3 pb-1.5 sm:pb-2 border-b border-gray-200 dark:border-gray-700">
+                      Rincian Biaya
+                    </h3>
+                    
+                    <div class="space-y-2 text-xs sm:text-sm">
+                      <div class="flex justify-between items-center py-1">
+                        <span class="text-gray-700 dark:text-gray-300">Biaya Pendaftaran KKNM</span>
+                        <span class="font-medium text-gray-900 dark:text-white">Rp750.000</span>
+                      </div>
+                      
+                      <div class="flex justify-between items-center py-1">
+                        <span class="text-gray-700 dark:text-gray-300">Biaya Administrasi</span>
+                        <span class="font-medium text-gray-900 dark:text-white">Rp10.000</span>
+                      </div>
+                      
+                      <div class="flex justify-between items-center pt-1.5 sm:pt-2 border-t border-gray-200 dark:border-gray-700 py-1">
+                        <span class="font-medium text-gray-900 dark:text-white">Total Pembayaran</span>
+                        <span class="font-medium text-gray-900 dark:text-white">Rp760.000</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="flex flex-wrap gap-2 sm:gap-3 sm:justify-end">
+                    <button type="button" class="btn bg-gray-800 dark:bg-gray-700 text-white hover:bg-gray-700 dark:hover:bg-gray-600 text-xs sm:text-sm py-1.5 sm:py-2 px-3 sm:px-4">
+                      <i class="fas fa-print mr-1 text-xs sm:text-sm"></i> Cetak Bukti
+                    </button>
+                    <button type="button" class="btn btn-outline text-xs sm:text-sm py-1.5 sm:py-2 px-3 sm:px-4">
+                      <i class="fas fa-download mr-1 text-xs sm:text-sm"></i> Unduh Bukti
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Pada tampilan mobile, kompak -->
+                <div class="block sm:hidden card w-full p-3">
+                  <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-2">Riwayat Pembayaran</h3>
+                  
+                  <div class="space-y-1.5 text-xs">
+                    <div class="flex justify-between py-0.5">
+                      <span class="text-gray-500 dark:text-gray-400">ID:</span>
+                      <span class="font-medium text-right text-gray-900 dark:text-white">KKNM-PAY-20250412-001</span>
+                    </div>
+                    <div class="flex justify-between py-0.5">
+                      <span class="text-gray-500 dark:text-gray-400">Tanggal:</span>
+                      <span class="text-right text-gray-900 dark:text-white">12/04/2025</span>
+                    </div>
+                    <div class="flex justify-between py-0.5">
+                      <span class="text-gray-500 dark:text-gray-400">Jumlah:</span>
+                      <span class="text-right text-gray-900 dark:text-white">Rp760.000</span>
+                    </div>
+                    <div class="flex justify-between py-0.5">
+                      <span class="text-gray-500 dark:text-gray-400">Status:</span>
+                      <span class="px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">Sukses</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Tampilkan tabel pada layar yang lebih besar -->
+                <div class="hidden sm:block card w-full p-3 sm:p-5">
+                  <h3 class="text-sm sm:text-base font-medium text-gray-900 dark:text-white mb-2 sm:mb-3">Riwayat Pembayaran</h3>
+                  
+                  <div class="overflow-x-auto -mx-3 sm:-mx-5">
+                    <div class="inline-block min-w-full align-middle">
+                      <table class="min-w-full">
+                        <thead class="bg-gray-50 dark:bg-gray-800">
+                          <tr>
+                            <th scope="col" class="px-2 sm:px-3 py-1.5 sm:py-2 text-left font-medium text-xs sm:text-sm text-gray-500 dark:text-gray-400">ID Pembayaran</th>
+                            <th scope="col" class="px-2 sm:px-3 py-1.5 sm:py-2 text-left font-medium text-xs sm:text-sm text-gray-500 dark:text-gray-400">Tanggal</th>
+                            <th scope="col" class="px-2 sm:px-3 py-1.5 sm:py-2 text-left font-medium text-xs sm:text-sm text-gray-500 dark:text-gray-400">Jumlah</th>
+                            <th scope="col" class="px-2 sm:px-3 py-1.5 sm:py-2 text-left font-medium text-xs sm:text-sm text-gray-500 dark:text-gray-400">Metode</th>
+                            <th scope="col" class="px-2 sm:px-3 py-1.5 sm:py-2 text-left font-medium text-xs sm:text-sm text-gray-500 dark:text-gray-400">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                          <tr>
+                            <td class="px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900 dark:text-white">KKNM-PAY-20250412-001</td>
+                            <td class="px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap text-xs sm:text-sm text-gray-500 dark:text-gray-300">12/04/2025</td>
+                            <td class="px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap text-xs sm:text-sm text-gray-500 dark:text-gray-300">Rp760.000</td>
+                            <td class="px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap text-xs sm:text-sm text-gray-500 dark:text-gray-300">Transfer Bank (BNI)</td>
+                            <td class="px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap">
+                              <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">Sukses</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="card w-full p-3 sm:p-5">
+                  <h3 class="text-sm sm:text-base font-medium text-gray-900 dark:text-white mb-2 sm:mb-3">Metode Pembayaran</h3>
+                  
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+                    <div class="border dark:border-gray-700 rounded-lg p-2 sm:p-4 bg-white dark:bg-gray-800">
+                      <div class="flex items-center mb-1 sm:mb-2">
+                        <i class="fas fa-university text-blue-600 dark:text-blue-400 mr-2 text-xs sm:text-sm"></i>
+                        <h4 class="text-xs sm:text-sm font-medium dark:text-white">Transfer Bank</h4>
+                      </div>
+                      <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                        Pembayaran melalui transfer bank ke rekening resmi universitas.
+                      </p>
+                    </div>
+                    
+                    <div class="border dark:border-gray-700 rounded-lg p-2 sm:p-4 bg-white dark:bg-gray-800">
+                      <div class="flex items-center mb-1 sm:mb-2">
+                        <i class="fas fa-qrcode text-blue-600 dark:text-blue-400 mr-2 text-xs sm:text-sm"></i>
+                        <h4 class="text-xs sm:text-sm font-medium dark:text-white">QRIS</h4>
+                      </div>
+                      <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                        Scan kode QR untuk pembayaran instan menggunakan e-wallet.
+                      </p>
+                    </div>
+                    
+                    <div class="border dark:border-gray-700 rounded-lg p-2 sm:p-4 bg-white dark:bg-gray-800">
+                      <div class="flex items-center mb-1 sm:mb-2">
+                        <i class="fas fa-credit-card text-blue-600 dark:text-blue-400 mr-2 text-xs sm:text-sm"></i>
+                        <h4 class="text-xs sm:text-sm font-medium dark:text-white">Kartu Kredit/Debit</h4>
+                      </div>
+                      <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                        Pembayaran online menggunakan kartu kredit atau debit.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Help Page -->
+            <div id="help-page" class="page">
+              <div class="space-y-6">
+                <div class="card">
+                  <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <i class="fas fa-question-circle w-6 h-6 text-blue-600 mr-2"></i>
+                    Bantuan
+                  </h2>
+                  
+                  <div class="mb-8">
+                    <p class="text-gray-600 mb-6">
+                      Selamat datang di pusat bantuan Sistem Pendaftaran KKNM. Halaman ini berisi panduan dan informasi tentang berbagai fitur dan proses dalam sistem.
+                    </p>
+                    
+                    <div class="flex items-center space-x-4 mb-6">
+                      <div class="w-full">
+                        <label for="searchHelp" class="sr-only">Cari bantuan</label>
+                        <div class="relative">
+                          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                          </div>
+                          <input type="text" id="searchHelp" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Cari topik bantuan...">
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-primary">
+                        Cari
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+                      <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                          <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg">Pendaftaran</h3>
+                      </div>
+                      <ul class="space-y-2">
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Syarat pendaftaran KKNM
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Cara mengisi formulir pendaftaran
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Dokumen yang perlu disiapkan
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Memperbaiki kesalahan data
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+                      <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                          <i class="fas fa-credit-card"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg">Pembayaran</h3>
+                      </div>
+                      <ul class="space-y-2">
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Biaya pendaftaran KKNM
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Metode pembayaran
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Status pembayaran belum terverifikasi
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Cara mendapatkan bukti pembayaran
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+                      <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                          <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg">Lokasi</h3>
+                      </div>
+                      <ul class="space-y-2">
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Cara memilih lokasi KKNM
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Informasi tentang lokasi KKNM
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Persyaratan khusus tiap lokasi
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="text-sm text-gray-700 hover:text-blue-600 flex items-center">
+                            <i class="fas fa-angle-right text-gray-400 mr-2 text-xs"></i>
+                            Perubahan pilihan lokasi
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Pertanyaan Umum (FAQ)</h3>
+                    
+                    <div class="space-y-4">
+                      <div class="border border-gray-200 rounded-lg">
+                        <button class="flex w-full justify-between items-center px-4 py-3 text-left">
+                          <span class="font-medium text-gray-900">Apa itu KKNM?</span>
+                          <i class="fas fa-chevron-down text-gray-500"></i>
+                        </button>
+                        <div class="px-4 pb-4">
+                          <p class="text-gray-600">
+                            KKNM (Kuliah Kerja Nyata Mahasiswa) adalah program pengabdian kepada masyarakat yang dilakukan oleh mahasiswa sebagai bagian dari Tri Dharma Perguruan Tinggi. Program ini memungkinkan mahasiswa untuk menerapkan ilmu yang telah dipelajari di perguruan tinggi untuk membantu memecahkan masalah dan mendorong pembangunan di masyarakat.
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div class="border border-gray-200 rounded-lg">
+                        <button class="flex w-full justify-between items-center px-4 py-3 text-left">
+                          <span class="font-medium text-gray-900">Siapa yang wajib mengikuti KKNM?</span>
+                          <i class="fas fa-chevron-down text-gray-500"></i>
+                        </button>
+                        <div class="px-4 pb-4">
+                          <p class="text-gray-600">
+                            KKNM wajib diikuti oleh seluruh mahasiswa jenjang S1 yang telah memenuhi persyaratan akademik, yaitu telah menyelesaikan minimal 100 SKS dan IPK minimal 2.00. Persyaratan lebih detail dapat dilihat pada pedoman KKNM yang berlaku.
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div class="border border-gray-200 rounded-lg">
+                        <button class="flex w-full justify-between items-center px-4 py-3 text-left">
+                          <span class="font-medium text-gray-900">Berapa lama pelaksanaan KKNM?</span>
+                          <i class="fas fa-chevron-down text-gray-500"></i>
+                        </button>
+                        <div class="px-4 pb-4">
+                          <p class="text-gray-600">
+                            Pelaksanaan KKNM berlangsung selama 2 bulan (8 minggu) di lokasi yang telah ditentukan. Sebelum pelaksanaan, mahasiswa akan mengikuti pembekalan selama 2 minggu. Total program KKNM termasuk pembekalan dan pelaporan hasil adalah kurang lebih 3 bulan.
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div class="border border-gray-200 rounded-lg">
+                        <button class="flex w-full justify-between items-center px-4 py-3 text-left">
+                          <span class="font-medium text-gray-900">Bagaimana cara memilih lokasi KKNM?</span>
+                          <i class="fas fa-chevron-down text-gray-500"></i>
+                        </button>
+                        <div class="px-4 pb-4">
+                          <p class="text-gray-600">
+                            Setelah melakukan pembayaran dan mengisi formulir pendaftaran, mahasiswa dapat memilih lokasi KKNM yang tersedia sesuai kuota yang ada. Pemilihan lokasi dilakukan secara online melalui sistem pendaftaran ini. Mahasiswa dapat memilih 3 lokasi sebagai prioritas pilihan.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="bg-blue-50 rounded-lg p-6 flex flex-col md:flex-row items-center justify-between">
+                    <div class="mb-4 md:mb-0 md:mr-6">
+                      <h3 class="text-lg font-semibold text-gray-900 mb-2">Masih memiliki pertanyaan?</h3>
+                      <p class="text-gray-600">
+                        Jika Anda tidak menemukan jawaban untuk pertanyaan Anda, silakan hubungi tim dukungan kami.
+                      </p>
+                    </div>
+                    <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3">
+                      <a href="mailto:kknm@university.ac.id" class="btn bg-white text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-envelope mr-1"></i> Email
+                      </a>
+                      <a href="https://wa.me/628123456789" target="_blank" class="btn btn-primary">
+                        <i class="fab fa-whatsapp mr-1"></i> WhatsApp
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Landing Page -->
+            <div id="landing-page" class="page">
+              <div class="space-y-8 py-8">
+                <!-- Hero Section -->
+                <div class="bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-lg">
+                  <div class="container mx-auto px-6 py-16">
+                    <div class="flex flex-col lg:flex-row items-center">
+                      <div class="lg:w-1/2">
+                        <h1 class="text-4xl font-bold mb-4">Kuliah Kerja Nyata Mahasiswa</h1>
+                        <p class="text-xl mb-6">Aplikasi pendaftaran KKNM untuk memudahkan proses pengabdian kepada masyarakat sebagai bagian integral dari Tri Dharma Perguruan Tinggi.</p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                          <a href="#login" data-page="login" class="btn bg-white text-blue-700 hover:bg-blue-50 font-medium">
+                            <i class="fas fa-sign-in-alt mr-2"></i> Masuk
+                          </a>
+                          <a href="#register" data-page="register" class="btn bg-blue-500 border border-white text-white hover:bg-blue-600 font-medium">
+                            <i class="fas fa-user-plus mr-2"></i> Daftar Akun
+                          </a>
+                        </div>
+                      </div>
+                      <div class="lg:w-1/2 mt-10 lg:mt-0 flex justify-center">
+                        <div class="bg-white/10 rounded-lg p-6 backdrop-blur-sm w-full max-w-md">
+                          <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-600 mr-3">
+                              <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div>
+                              <h3 class="font-bold text-xl">Jadwal Pendaftaran</h3>
+                              <p>1 Mei - 15 Mei 2025</p>
+                            </div>
+                          </div>
+                          <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-600 mr-3">
+                              <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                              <h3 class="font-bold text-xl">Kuota Pendaftaran</h3>
+                              <p>500 mahasiswa</p>
+                            </div>
+                          </div>
+                          <div class="flex items-center">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-600 mr-3">
+                              <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                              <h3 class="font-bold text-xl">Lokasi Tersedia</h3>
+                              <p>15 lokasi di seluruh Indonesia</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Tentang KKNM -->
+                <div class="container mx-auto px-6">
+                  <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Tentang KKNM</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                      Kuliah Kerja Nyata Mahasiswa (KKNM) adalah program pengabdian kepada masyarakat yang memberikan pengalaman belajar dan bekerja bagi mahasiswa dalam menerapkan ilmu pengetahuan di tengah masyarakat.
+                    </p>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                      <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4">
+                        <i class="fas fa-book-open text-xl"></i>
+                      </div>
+                      <h3 class="text-xl font-semibold mb-2">Edukasi</h3>
+                      <p class="text-gray-600">
+                        Memberikan pengalaman belajar bagi mahasiswa tentang pembangunan masyarakat dan penerapan ilmu pengetahuan dalam kehidupan nyata.
+                      </p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                      <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4">
+                        <i class="fas fa-hands-helping text-xl"></i>
+                      </div>
+                      <h3 class="text-xl font-semibold mb-2">Pengabdian</h3>
+                      <p class="text-gray-600">
+                        Memberdayakan masyarakat melalui penerapan ilmu pengetahuan, teknologi, dan seni yang dikuasai mahasiswa.
+                      </p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                      <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4">
+                        <i class="fas fa-award text-xl"></i>
+                      </div>
+                      <h3 class="text-xl font-semibold mb-2">Pengalaman</h3>
+                      <p class="text-gray-600">
+                        Melatih soft-skill kepemimpinan dan kerja tim dalam lingkungan nyata serta membangun jaringan dengan berbagai pemangku kepentingan.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Daftar Lokasi -->
+                <div class="container mx-auto px-6 pt-8">
+                  <div class="mb-12">
+                    <div class="flex justify-between items-center mb-6">
+                      <h2 class="text-3xl font-bold text-gray-900">Lokasi KKNM</h2>
+                      <a href="#login" data-page="login" class="text-blue-600 hover:text-blue-700 font-medium">
+                        Lihat Semua <i class="fas fa-arrow-right ml-1"></i>
+                      </a>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <!-- Lokasi 1 -->
+                      <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        <div class="p-6">
+                          <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Desa Sukamaju</h3>
+                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                              Tersedia
+                            </span>
+                          </div>
+                          
+                          <p class="text-sm text-gray-600 mb-3 flex items-center">
+                            <i class="fas fa-map-marker-alt w-4 h-4 mr-1 flex-shrink-0 text-gray-500"></i>
+                            <span>Kecamatan Cianjur, Kabupaten Cianjur, Jawa Barat</span>
+                          </p>
+                          
+                          <div class="mb-3 flex items-center">
+                            <i class="fas fa-users w-4 h-4 mr-1 text-gray-500"></i>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                              <div class="bg-blue-600 h-2.5 rounded-full" style="width: 40%"></div>
+                            </div>
+                            <span class="ml-2 text-xs text-gray-600">8/20</span>
+                          </div>
+                          
+                          <p class="text-sm text-gray-600 mb-4">
+                            Lokasi KKN fokus pada pengembangan pendidikan dan pemberdayaan ekonomi masyarakat desa.
+                          </p>
+                          
+                          <a href="#login" data-page="login" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                            Daftar untuk melihat detail <i class="fas fa-arrow-right ml-1"></i>
+                          </a>
+                        </div>
+                      </div>
+                      
+                      <!-- Lokasi 2 -->
+                      <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        <div class="p-6">
+                          <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Desa Harapan Jaya</h3>
+                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                              Tersedia
+                            </span>
+                          </div>
+                          
+                          <p class="text-sm text-gray-600 mb-3 flex items-center">
+                            <i class="fas fa-map-marker-alt w-4 h-4 mr-1 flex-shrink-0 text-gray-500"></i>
+                            <span>Kecamatan Padang Cermin, Kabupaten Pesawaran, Lampung</span>
+                          </p>
+                          
+                          <div class="mb-3 flex items-center">
+                            <i class="fas fa-users w-4 h-4 mr-1 text-gray-500"></i>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                              <div class="bg-blue-600 h-2.5 rounded-full" style="width: 66%"></div>
+                            </div>
+                            <span class="ml-2 text-xs text-gray-600">10/15</span>
+                          </div>
+                          
+                          <p class="text-sm text-gray-600 mb-4">
+                            Fokus pada program lingkungan dan pariwisata berkelanjutan.
+                          </p>
+                          
+                          <a href="#login" data-page="login" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                            Daftar untuk melihat detail <i class="fas fa-arrow-right ml-1"></i>
+                          </a>
+                        </div>
+                      </div>
+                      
+                      <!-- Lokasi 3 -->
+                      <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        <div class="p-6">
+                          <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Kelurahan Sejahtera</h3>
+                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                              Tersedia
+                            </span>
+                          </div>
+                          
+                          <p class="text-sm text-gray-600 mb-3 flex items-center">
+                            <i class="fas fa-map-marker-alt w-4 h-4 mr-1 flex-shrink-0 text-gray-500"></i>
+                            <span>Kecamatan Lowokwaru, Kota Malang, Jawa Timur</span>
+                          </p>
+                          
+                          <div class="mb-3 flex items-center">
+                            <i class="fas fa-users w-4 h-4 mr-1 text-gray-500"></i>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                              <div class="bg-blue-600 h-2.5 rounded-full" style="width: 60%"></div>
+                            </div>
+                            <span class="ml-2 text-xs text-gray-600">15/25</span>
+                          </div>
+                          
+                          <p class="text-sm text-gray-600 mb-4">
+                            Program KKN perkotaan dengan fokus pada digitalisasi UMKM dan literasi digital.
+                          </p>
+                          
+                          <a href="#login" data-page="login" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                            Daftar untuk melihat detail <i class="fas fa-arrow-right ml-1"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- CTA Section -->
+                <div class="bg-blue-50">
+                  <div class="container mx-auto px-6 py-16 text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Siap Bergabung dengan KKNM?</h2>
+                    <p class="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+                      Jangan lewatkan kesempatan untuk mendapatkan pengalaman berharga dalam pengabdian masyarakat. Daftar sekarang dan jadilah bagian dari perubahan.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                      <a href="#register" data-page="register" class="btn btn-primary px-8 py-3">
+                        Daftar Sekarang
+                      </a>
+                      <a href="#login" data-page="login" class="btn btn-outline px-8 py-3">
+                        Masuk ke Akun
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Login Page -->
+            <div id="login-page" class="page">
+              <div class="flex min-h-screen flex-col justify-center pb-12">
+                <div class="mx-auto w-full max-w-md">
+                  <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900">
+                      Masuk ke Akun Anda
+                    </h2>
+                    <p class="mt-2 text-sm text-gray-600">
+                      Silakan masuk untuk mengakses sistem pendaftaran KKNM
+                    </p>
+            </div>
+            
+                  <div class="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                    <form class="space-y-6" action="#" method="POST">
+                      <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">
+                          Email
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            required
+                            class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="mahasiswa@student.ac.id"
+                          />
+                        </div>
+            </div>
+            
+                      <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">
+                          Password
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autocomplete="current-password"
+                            required
+                            class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                          />
+                        </div>
+                      </div>
+              
+                      <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                          <input
+                            id="remember-me"
+                            name="remember-me"
+                            type="checkbox"
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                            Ingat saya
+                          </label>
+                        </div>
+              
+                        <div class="text-sm">
+                          <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+                            Lupa password?
+                          </a>
+                        </div>
+                      </div>
+              
+                      <div>
+                        <button
+                          type="submit"
+                          class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                          <i class="fas fa-sign-in-alt mr-2"></i>
+                          Masuk
+                        </button>
+                      </div>
+                    </form>
+                    
+                    <div class="mt-6">
+                      <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                          <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                          <span class="px-2 bg-white text-gray-500">Atau masuk dengan</span>
+                        </div>
+                      </div>
+                      
+                      <div class="mt-6 grid grid-cols-2 gap-3">
+                        <a
+                          href="#"
+                          class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                        >
+                          <i class="text-red-600 fab fa-google mr-2"></i>
+                          Google
+                        </a>
+                        
+                        <button
+                          type="button"
+                          class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          id="demo-login"
+                        >
+                          <i class="text-blue-600 fas fa-user-graduate mr-2"></i>
+                          Akun Demo
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="text-center mt-4">
+                    <p class="text-sm text-gray-600">
+                      Belum memiliki akun?
+                      <a href="#register" data-page="register" class="font-medium text-blue-600 hover:text-blue-500">
+                        Daftar sekarang
+                      </a>
+                    </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+            <!-- Register Page -->
+            <div id="register-page" class="page">
+              <div class="flex min-h-screen flex-col justify-center pb-12">
+                <div class="mx-auto w-full max-w-md">
+                  <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900">
+                      Daftar Akun Baru
+                    </h2>
+                    <p class="mt-2 text-sm text-gray-600">
+                      Buat akun untuk memulai pendaftaran KKNM
+                        </p>
+                      </div>
+                      
+                  <div class="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                    <form class="space-y-6" action="#" method="POST">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label for="first-name" class="block text-sm font-medium text-gray-700">
+                            Nama Depan
+                          </label>
+                          <div class="mt-1">
+                            <input
+                              id="first-name"
+                              name="first-name"
+                              type="text"
+                              required
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label for="last-name" class="block text-sm font-medium text-gray-700">
+                            Nama Belakang
+                          </label>
+                          <div class="mt-1">
+                            <input
+                              id="last-name"
+                              name="last-name"
+                              type="text"
+                              required
+                              class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                        </div>
+                        </div>
+                        
+                      <div>
+                        <label for="nim" class="block text-sm font-medium text-gray-700">
+                          NIM
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="nim"
+                            name="nim"
+                            type="text"
+                            required
+                            class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Masukkan Nomor Induk Mahasiswa"
+                          />
+                          </div>
+                        </div>
+                      
+                      <div>
+                        <label for="register-email" class="block text-sm font-medium text-gray-700">
+                          Email
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="register-email"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            required
+                            class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="mahasiswa@student.ac.id"
+                          />
+                      </div>
+                        <p class="mt-1 text-xs text-gray-500">
+                          Gunakan email institusi untuk verifikasi status mahasiswa
+                        </p>
+                    </div>
+                      
+                      <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700">
+                          Nomor Telepon
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            required
+                            class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="08xxxxxxxxxx"
+                          />
+                  </div>
+                </div>
+                
+                      <div>
+                        <label for="register-password" class="block text-sm font-medium text-gray-700">
+                          Password
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="register-password"
+                            name="password"
+                            type="password"
+                            required
+                            class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                          />
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">
+                          Password minimal 8 karakter dengan kombinasi huruf dan angka
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <label for="confirm-password" class="block text-sm font-medium text-gray-700">
+                          Konfirmasi Password
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="confirm-password"
+                            name="confirm-password"
+                            type="password"
+                            required
+                            class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                          />
+                        </div>
+                            </div>
+                            
+                      <div class="flex items-center">
+                        <input
+                          id="terms"
+                          name="terms"
+                          type="checkbox"
+                          required
+                          class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label for="terms" class="ml-2 block text-sm text-gray-700">
+                          Saya menyetujui <a href="#" class="text-blue-600 hover:text-blue-500">Syarat dan Ketentuan</a> serta <a href="#" class="text-blue-600 hover:text-blue-500">Kebijakan Privasi</a>
+                        </label>
+                      </div>
+                      
+                      <div>
+                        <button
+                          type="submit"
+                          class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                          <i class="fas fa-user-plus mr-2"></i>
+                          Daftar
+                        </button>
+                              </div>
+                    </form>
+                            </div>
+                            
+                  <div class="text-center mt-4">
+                            <p class="text-sm text-gray-600">
+                      Sudah memiliki akun?
+                      <a href="#login" data-page="login" class="font-medium text-blue-600 hover:text-blue-500">
+                        Login
+                      </a>
+                            </p>
+                          </div>
+                        </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-white dark:bg-gray-800 py-6 px-6 border-t border-gray-200 dark:border-gray-700 mt-auto w-full">
+          <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+              <div class="text-center md:text-left mb-4 md:mb-0">
+                <p class="text-sm text-gray-600 dark:text-gray-300">© 2025 Aplikasi Pendaftaran KKNM. Hak Cipta Dilindungi.</p>
+              </div>
+              <div class="flex justify-center md:justify-end space-x-6">
+                <a href="#" class="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">Kebijakan Privasi</a>
+                <a href="#" class="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">Syarat & Ketentuan</a>
+                <a href="#" class="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">Kontak</a>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Theme Toggle functionality
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      
+      // Check for saved theme preference or use the system preference
+      const savedTheme = localStorage.getItem('theme');
+      
+      if (savedTheme === 'dark' || 
+          (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      
+      // Toggle theme
+      themeToggleBtn.addEventListener('click', function() {
+        let isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      });
+      
+      // Check login status (for demo purposes)
+      let isLoggedIn = false; // Default to logged out
+      
+      // Toggle login UI state
+      function updateLoginUI() {
+        const userLoggedIn = document.getElementById('user-logged-in');
+        const userNotLoggedIn = document.getElementById('user-not-logged-in');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const toggleSidebarButton = document.getElementById('toggle-sidebar-button');
+        
+        if (isLoggedIn) {
+          userLoggedIn.classList.remove('hidden');
+          userNotLoggedIn.classList.add('hidden');
+          sidebar.classList.remove('hidden');
+          mainContent.classList.remove('w-full');
+          mainContent.classList.add('lg:ml-64');
+          toggleSidebarButton.classList.remove('hidden');
+        } else {
+          userLoggedIn.classList.add('hidden');
+          userNotLoggedIn.classList.remove('hidden');
+          sidebar.classList.add('hidden');
+          mainContent.classList.add('w-full');
+          mainContent.classList.remove('lg:ml-64');
+          toggleSidebarButton.classList.add('hidden');
+          
+          // Show landing page when not logged in
+          document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+          });
+          
+          document.getElementById('landing-page').classList.add('active');
+        }
+      }
+      
+      // Call on page load
+      updateLoginUI();
+      
+      // Demo Login button
+      const demoLoginButton = document.getElementById('demo-login');
+      if (demoLoginButton) {
+        demoLoginButton.addEventListener('click', function() {
+          isLoggedIn = true;
+          updateLoginUI();
+          
+          // Navigate to dashboard
+          document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+          });
+          document.getElementById('dashboard-page').classList.add('active');
+        });
+      }
+      
+      // Logout button
+      const logoutButton = document.getElementById('logout-button');
+      if (logoutButton) {
+        logoutButton.addEventListener('click', function() {
+          isLoggedIn = false;
+          updateLoginUI();
+          alert('Anda telah keluar dari sistem');
+        });
+      }
+      
+      // Sidebar Toggle
+      const toggleSidebarButton = document.getElementById('toggle-sidebar-button');
+      const closeSidebarButton = document.getElementById('close-sidebar');
+      const sidebar = document.getElementById('sidebar');
+      
+      if (toggleSidebarButton) {
+        toggleSidebarButton.addEventListener('click', function() {
+          sidebar.classList.toggle('-translate-x-full');
+        });
+      }
+      
+      if (closeSidebarButton) {
+        closeSidebarButton.addEventListener('click', function() {
+          sidebar.classList.add('-translate-x-full');
+        });
+      }
+      
+      // Navigation
+      const navLinks = document.querySelectorAll('[data-page]');
+      
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const pageId = this.getAttribute('data-page');
+          
+          // If user tries to access pages that require login
+          if (!isLoggedIn && pageId !== 'login' && pageId !== 'register') {
+            alert('Silakan login terlebih dahulu');
+            document.querySelectorAll('.page').forEach(page => {
+              page.classList.remove('active');
+            });
+            document.getElementById('login-page').classList.add('active');
+            return;
+          }
+          
+          // Special handling for login/register pages
+          if (pageId === 'login' || pageId === 'register') {
+            document.querySelectorAll('.page').forEach(page => {
+              page.classList.remove('active');
+            });
+            document.getElementById(pageId + '-page').classList.add('active');
+            return;
+          }
+          
+          // Regular page navigation for logged in users
+          // Update active sidebar link
+          document.querySelectorAll('.sidebar a').forEach(a => {
+            a.classList.remove('bg-blue-50', 'dark:bg-blue-900/50', 'text-blue-600', 'dark:text-blue-300');
+            a.classList.add('hover:bg-gray-100', 'dark:hover:bg-gray-700');
+          });
+          
+          document.querySelectorAll(`.sidebar a[data-page="${pageId}"]`).forEach(a => {
+            a.classList.add('bg-blue-50', 'dark:bg-blue-900/50', 'text-blue-600', 'dark:text-blue-300');
+            a.classList.remove('hover:bg-gray-100', 'dark:hover:bg-gray-700');
+          });
+          
+          // Show active page
+          document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+          });
+          
+          document.getElementById(pageId + '-page').classList.add('active');
+          
+          // On mobile, close sidebar after navigation
+          if (window.innerWidth < 1024) {
+            sidebar.classList.add('-translate-x-full');
+          }
+        });
+      });
+      
+      // Login Form Submission
+      const loginForm = document.querySelector('#login-page form');
+      if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          isLoggedIn = true;
+          updateLoginUI();
+          
+          // Navigate to dashboard
+          document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+          });
+          document.getElementById('dashboard-page').classList.add('active');
+        });
+      }
+      
+      // Register Form Submission
+      const registerForm = document.querySelector('#register-page form');
+      if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          isLoggedIn = true;
+          updateLoginUI();
+          
+          // Navigate to dashboard
+          document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+          });
+          document.getElementById('dashboard-page').classList.add('active');
+          
+          alert('Akun berhasil dibuat! Anda sekarang sudah login.');
+        });
+      }
+      
+      // FAQ Accordion
+      const faqButtons = document.querySelectorAll('.help-page .border.border-gray-200 button');
+      
+      faqButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Toggle icon
+          const icon = this.querySelector('i');
+          icon.classList.toggle('fa-chevron-down');
+          icon.classList.toggle('fa-chevron-up');
+          
+          // Toggle content visibility
+          const content = this.nextElementSibling;
+          if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + 'px';
+          }
+        });
+      });
+      
+      // File inputs
+      const fileInputs = document.querySelectorAll('input[type="file"]');
+      fileInputs.forEach(input => {
+        input.addEventListener('change', function(e) {
+          const fileName = e.target.files[0]?.name;
+          if (fileName) {
+            const parent = this.closest('label');
+            const textElement = parent.querySelector('p:first-of-type');
+            if (textElement) {
+              textElement.textContent = fileName;
+            }
+          }
+        });
+      });
+      
+      // KKNM Registration Form steps
+      const regForm = document.querySelector('#registration-page form');
+      const regNextButton = document.querySelector('#registration-page button.btn-primary');
+      
+      if (regNextButton) {
+        regNextButton.addEventListener('click', function() {
+          // For demo purposes, simulate going to step 2
+          const progressBar = document.querySelector('#registration-page .bg-blue-600');
+          progressBar.style.width = '50%';
+          
+          // Replace content with location selection (simulated)
+          const formContent = document.querySelector('#registration-page form .space-y-6');
+          
+          formContent.innerHTML = `
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Pilih Lokasi KKNM</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                Silakan pilih lokasi KKNM yang Anda inginkan berdasarkan ketersediaan kuota. Anda dapat memilih hingga 3 pilihan lokasi.
+              </p>
+              
+              <div class="space-y-4 mb-6">
+                <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-start">
+                      <input
+                        id="location-1"
+                        type="radio"
+                        name="location"
+                        value="1"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 mt-1"
+                      />
+                      <label for="location-1" class="ml-2 text-gray-900 dark:text-white">
+                        <div class="font-medium">Desa Sukamaju</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-300">Kecamatan Cianjur, Kabupaten Cianjur, Jawa Barat</div>
+                        <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          <span>Kuota: 8/20</span>
+                          <span class="mx-2">•</span>
+                          <span class="text-green-600 dark:text-green-400">Tersedia</span>
+                              </div>
+                      </label>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">
+                      Prioritas 1
+                    </span>
+                  </div>
+                            </div>
+                            
+                <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-start">
+                      <input
+                        id="location-2"
+                        type="radio"
+                        name="location"
+                        value="2"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 mt-1"
+                      />
+                      <label for="location-2" class="ml-2 text-gray-900 dark:text-white">
+                        <div class="font-medium">Desa Harapan Jaya</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-300">Kecamatan Padang Cermin, Kabupaten Pesawaran, Lampung</div>
+                        <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          <span>Kuota: 10/15</span>
+                          <span class="mx-2">•</span>
+                          <span class="text-green-600 dark:text-green-400">Tersedia</span>
+                          </div>
+                      </label>
+                        </div>
+                    <span class="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
+                      Pilih
+                              </span>
+                  </div>
+                            </div>
+                            
+                <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-start">
+                      <input
+                        id="location-3"
+                        type="radio"
+                        name="location"
+                        value="3"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 mt-1"
+                      />
+                      <label for="location-3" class="ml-2 text-gray-900 dark:text-white">
+                        <div class="font-medium">Kelurahan Sejahtera</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-300">Kecamatan Lowokwaru, Kota Malang, Jawa Timur</div>
+                        <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          <span>Kuota: 15/25</span>
+                          <span class="mx-2">•</span>
+                          <span class="text-green-600 dark:text-green-400">Tersedia</span>
+                              </div>
+                      </label>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
+                      Pilih
+                    </span>
+                  </div>
+                </div>
+              </div>
+                            </div>
+                            
+            <div class="pt-2 flex justify-between space-x-3">
+              <button type="button" class="btn btn-outline" id="back-to-step-1">
+                <i class="fas fa-arrow-left mr-1"></i> Kembali
+              </button>
+              <button type="button" class="btn btn-primary" id="next-to-step-3">
+                Lanjutkan ke Konfirmasi
+              </button>
+                          </div>
+          `;
+          
+          // Add event listener for back button
+          document.getElementById('back-to-step-1').addEventListener('click', function() {
+            location.reload(); // Just reload for demo purposes
+          });
+          
+          // Add event listener for next button
+          document.getElementById('next-to-step-3').addEventListener('click', function() {
+            const progressBar = document.querySelector('#registration-page .bg-blue-600');
+            progressBar.style.width = '100%';
+            
+            // Replace content with confirmation (simulated)
+            formContent.innerHTML = `
+              <div class="text-center py-6">
+                <div class="mb-4 text-green-500 dark:text-green-400">
+                  <i class="fas fa-check-circle text-6xl"></i>
+                        </div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Pendaftaran Berhasil!</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-6">
+                  Selamat! Anda telah berhasil mendaftar KKNM. Silakan tunggu pengumuman selanjutnya terkait penempatan lokasi.
+                </p>
+                
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg text-left mb-6">
+                  <h4 class="font-semibold mb-2 text-gray-900 dark:text-white">Detail Pendaftaran:</h4>
+                  <ul class="space-y-1 text-sm text-gray-600 dark:text-gray-300">
+                    <li><span class="font-medium">Nama:</span> Mahasiswa Demo</li>
+                    <li><span class="font-medium">NIM:</span> 12345678</li>
+                    <li><span class="font-medium">Program Studi:</span> Teknik Informatika</li>
+                    <li><span class="font-medium">Lokasi Pilihan:</span> Desa Sukamaju</li>
+                    <li><span class="font-medium">ID Pendaftaran:</span> KKNM-REG-20250412-001</li>
+                  </ul>
+                      </div>
+                      
+                <div class="flex justify-center space-x-3">
+                  <a href="#dashboard" data-page="dashboard" class="btn btn-outline">
+                    <i class="fas fa-home mr-1"></i> Kembali ke Dashboard
+                  </a>
+                  <button type="button" class="btn btn-primary">
+                    <i class="fas fa-print mr-1"></i> Cetak Bukti Pendaftaran
+                  </button>
+                      </div>
+                    </div>
+            `;
+          });
+        });
+      }
+      
+      // Add event listener to logo link
+      const logoLink = document.getElementById('logo-link');
+      if (logoLink) {
+        logoLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (isLoggedIn) {
+            // Navigate to dashboard
+            document.querySelectorAll('.page').forEach(page => {
+              page.classList.remove('active');
+            });
+            document.getElementById('dashboard-page').classList.add('active');
+          } else {
+            // Navigate to landing page
+            document.querySelectorAll('.page').forEach(page => {
+              page.classList.remove('active');
+            });
+            document.getElementById('landing-page').classList.add('active');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html> 
